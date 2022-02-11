@@ -6,6 +6,8 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Home from "./screens/Home";
 import Register from "./screens/Register";
 import Login from "./screens/Login";
+import Profile from "./screens/Profile";
+import { useEffect } from "react";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -17,8 +19,9 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen name="Register" component={Register} />
-            <Stack.Screen name="Home" component={Login} />
-            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Login" component={Login} />
+            {/* <Stack.Screen name="Home" component={Home} /> */}
+            <Stack.Screen name="Profile" component={Profile} />
           </Stack.Navigator>
         </NavigationContainer>
       </QueryClientProvider>

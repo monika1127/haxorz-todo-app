@@ -1,11 +1,12 @@
-import { View, Text, AsyncStorage } from "react-native";
+import { View } from "react-native";
 import React from "react";
 import { useForm } from "react-hook-form";
 import Input from "../components/form/InputField";
-import { Button } from "native-base";
+import { Button, Text } from "native-base";
 import { useMutation } from "react-query";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Register = () => {
   const { handleSubmit, control } = useForm();
@@ -20,16 +21,23 @@ const Register = () => {
     },
     {
       onSuccess: (data, variables, context) => {
-        console.log("reg");
-        console.log(data, variables, context);
-        AsyncStorage.setItem("Bearer", data.token);
-        navigation.navigate("Home");
+        register(data.token);
       },
       onError: (error, variables, context) => {
         console.log(error);
       },
     }
   );
+
+  const register = async (token) => {
+    try {
+      AsyncStorage.setItem("Bearer", token);
+      await AsyncStorage.setItem("Bearer", token);
+      navigation.navigate("Home");
+    } catch (e) {
+      console.log(error);
+    }
+  };
 
   return (
     <View>
