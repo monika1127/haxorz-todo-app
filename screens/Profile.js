@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import { Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
@@ -9,16 +9,37 @@ import { useNavigation } from "@react-navigation/native";
 const Profile = () => {
   const navigation = useNavigation();
 
-  const { data, isError, isLoading, isFetching } = useQuery(
-    "userProfile",
+  const { data, isError, isLoading } = useQuery("userProfile", async () => {
+    const token = await AsyncStorage.getItem("Bearer");
+    return axios.get("https://api-nodejs-todolist.herokuapp.com/user/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  });
+
+  const mutation = useMutation(
     async () => {
       const token = await AsyncStorage.getItem("Bearer");
-      console.log("token", token);
-      return axios.get("https://api-nodejs-todolist.herokuapp.com/user/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      console.log(token);
+      return axios.post(
+        "https://api-nodejs-todolist.herokuapp.com/user/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: (data, variables, context) => {
+        AsyncStorage.setItem("Bearer", "");
+        navigation.navigate("Login");
+      },
+      onError: (error, variables, context) => {
+        console.log("error", error);
+      },
     }
   );
 
@@ -35,7 +56,7 @@ const Profile = () => {
       <Text>Email: {user.email}</Text>
       <Text>Age: {user.age}</Text>
 
-      {/* <Button onPress={() => mutation.mutate()} >Logout</Button> */}
+      <Button onPress={() => mutation.mutate()}>Logout</Button>
     </View>
   );
 };
