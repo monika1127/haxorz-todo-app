@@ -1,26 +1,27 @@
-import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NativeBaseProvider, Text, Box } from "native-base";
+import { NativeBaseProvider } from "native-base";
+import { QueryClient, QueryClientProvider } from "react-query";
+
 import Home from "./screens/Home";
 import Register from "./screens/Register";
 import Login from "./screens/Login";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
+  const queryClient = new QueryClient();
+
   return (
     <NativeBaseProvider>
-      <Box>
-        <Text>Open up App.js to start working on your app!</Text>
-        <StatusBar style="auto" />
-      </Box>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Register" component={Register} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Home" component={Home} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <QueryClientProvider client={queryClient}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Register" component={Register} />
+            <Stack.Screen name="Home" component={Login} />
+            <Stack.Screen name="Home" component={Home} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </QueryClientProvider>
     </NativeBaseProvider>
   );
 }
