@@ -10,7 +10,10 @@ const Profile = () => {
   const navigation = useNavigation();
 
   const { data, isError, isLoading } = useQuery("userProfile", async () => {
-    const token = await AsyncStorage.getItem("Bearer");
+    // const token = await AsyncStorage.getItem("Bearer");
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjJiMThmZTJmZDQwOTAwMTc4YTU4ZjkiLCJpYXQiOjE2NDY5OTE2MTR9.fs-evnn4zVJgpuVh1rl03Gw2qwKW4ue7KWd-vt87nL8";
+    console.log("token", token);
     return axios.get("https://api-nodejs-todolist.herokuapp.com/user/me", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -21,7 +24,6 @@ const Profile = () => {
   const mutation = useMutation(
     async () => {
       const token = await AsyncStorage.getItem("Bearer");
-      console.log(token);
       return axios.post(
         "https://api-nodejs-todolist.herokuapp.com/user/logout",
         {},
@@ -46,8 +48,8 @@ const Profile = () => {
   const user = data && data.data;
 
   if (isLoading) return <Text>Loading...</Text>;
-  if (isError) return <Text>Something went wrong</Text>;
 
+  if (isError) return <Text>Error</Text>;
   const logout = {};
   return (
     <View>
